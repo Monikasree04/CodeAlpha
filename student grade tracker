@@ -1,0 +1,159 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student {
+    private String name;
+    private ArrayList<Integer> grades;
+
+    public Student(String name) {
+        this.name = name;
+        this.grades = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addGrade(int grade) {
+        grades.add(grade);
+    }
+
+    public ArrayList<Integer> getGrades() {
+        return grades;
+    }
+}
+
+public class StudentGrades {
+    private static ArrayList<Student> students = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        boolean running = true;
+        while (running) {
+            System.out.println("\nStudent Grade Tracker");
+            System.out.println("1. Add Student grades");
+            System.out.println("2. Display Students");
+            System.out.println("3. Calculate Average");
+            System.out.println("4. Calculate Highest Mark");
+            System.out.println("5. Calculate Lowest Mark");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    addStudent();
+                    break;
+                case 2:
+                    displayStudents();
+                    break;
+                case 3:
+                    calculateAverage();
+                    break;
+                case 4:
+                    calculateHighestMark();
+                    break;
+                case 5:
+                    calculateLowestMark();
+                    break;
+                case 6:
+                    running = false;
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please choose a number between 1 and 6.");
+            }
+        }
+        scanner.close();
+    }
+
+    public static void addStudent() {
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+        Student student = new Student(name);
+
+        System.out.println("Enter student marks. Type 'done' to finish.\n");
+        while (true) {
+            System.out.print("Enter mark (or type 'done'): ");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            try {
+                int grade = Integer.parseInt(input);
+                student.addGrade(grade);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid grade or type 'done' to finish.");
+            }
+        }
+        students.add(student);
+        System.out.println("Student mark added successfully.");
+    }
+
+    public static void displayStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students to display.");
+            return;
+        }
+        System.out.println("List of students:");
+        for (Student student : students) {
+            System.out.println("Student Name: " + student.getName());
+            System.out.println("Grades: " + student.getGrades());
+        }
+    }
+
+    public static void calculateAverage() {
+        if (students.isEmpty()) {
+            System.out.println("No students' grades to calculate.");
+            return;
+        }
+
+        double total = 0;
+        int count = 0;
+        for (Student student : students) {
+            for (int grade : student.getGrades()) {
+                total += grade;
+                count++;
+            }
+        }
+        System.out.println("Average grade: " + (total / count));
+    }
+
+    public static void calculateHighestMark() {
+        if (students.isEmpty()) {
+            System.out.println("No students' grades to calculate.");
+            return;
+        }
+
+        int highest = Integer.MIN_VALUE;
+        for (Student student : students) {
+            for (int grade : student.getGrades()) {
+                if (grade > highest) {
+                    highest = grade;
+                }
+            }
+        }
+        System.out.println("Highest grade: " + highest);
+    }
+
+    public static void calculateLowestMark() {
+        if (students.isEmpty()) {
+            System.out.println("No students' grades to calculate.");
+            return;
+        }
+
+        int lowest = Integer.MAX_VALUE;
+        for (Student student : students) {
+            for (int grade : student.getGrades()) {
+                if (grade < lowest) {
+                    lowest = grade;
+                }
+            }
+        }
+        System.out.println("Lowest grade: " + lowest);
+    }
+}
